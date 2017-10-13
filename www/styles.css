@@ -1,0 +1,22 @@
+.selectize-input { font-size: 12px; line-height: 5px;}
+.selectize-dropdown { font-size: 10px; line-height: 5px; }
+.control-label{ font-size: 12px;}
+
+
+.well{
+	background-color: #EEEEEE;
+	padding: 5px;
+	height: 200px;
+}
+body {
+        background-color: #FFFFFF;
+    }
+
+    body, label, input, button, select { 
+      font-family: 'Arial';
+	  color: #999999;
+    }
+h1 {
+	color: #253746;
+	font-size: 36px;
+}
