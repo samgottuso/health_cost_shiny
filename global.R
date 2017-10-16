@@ -6,7 +6,7 @@ library(stringr)
 
 
 ###reading in the engine tables as CSVs-- will eventually need to do this as RData and save it to the app
-diabetes_engine<-read.csv('~/Health_cost_shiny/diabetes_engine.csv',row.names = 1)
+diabetes_engine<-read.csv('diabetes_engine.csv',row.names = 1)
 
 ###Pre-made DFs--- different populations based on either Baltimore or King County
 bmore_hispanic_male<-c(7136,2581,617)
