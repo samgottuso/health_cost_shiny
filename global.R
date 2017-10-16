@@ -145,29 +145,29 @@ progression_rate_func<-function(measure_table,BMI){
 ##going to have to use this like the value_DF_creator function to create each table (both w and w/o intervention) and then combine them into the pre-diabetic tables
 case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,BMI=34){
   #subsetting by race
-  if(race=='all races'){
+  if(race=='All Races'){
     measure_table_race<-measure_table
   }##This isn't the most efficient way to do it, but with my current column names it is how we have to
-  else if(race=='hispanic'){
+  else if(race=='Hispanic'){
     measure_table_race<-measure_table[,c(1,5)]
-  }else if(race=='white'){
+  }else if(race=='White'){
     measure_table_race<-measure_table[,c(2,6)]
-  }else if(race=='black'){
+  }else if(race=='Black'){
     measure_table_race<-measure_table[,c(3,7)]
-  }else if(race=='asian'){
+  }else if(race=='Asian'){
     measure_table_race<-measure_table[,c(4,8)]
   }
   #subsetting by gender
-  if(gender=='both genders'){
+  if(gender=='Both Genders'){
     measure_table_gender<-measure_table_race
-  }else if(gender=='male'){
+  }else if(gender=='Male'){
     measure_table_gender<-measure_table_race[,1]
-  }else if(gender=='female'){
+  }else if(gender=='Female'){
     measure_table_gender<-measure_table_race[,2]
   }
   
   #subsetting by age
-  if(age=='all ages'){
+  if(age=='All Ages'){
     measure_table_final<-measure_table_gender
   }else if(age=='20-39'){
     measure_table_final<-measure_table_gender[1,]
@@ -245,19 +245,19 @@ case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,
   
 }
 
+#These are for developing, putting them into server.R for interactives 
+# low_IFG_no_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','no',34)
+# low_IFG_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','yes',34)
+# high_IFG_no_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','no',34)
+# high_IFG_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','yes',34)
+# IGT_no_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','no',34)
+# IGT_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','yes',34)
+# IFG_IGT_no_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','no',34)
+# IFG_IGT_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','yes',34)
 
-low_IFG_no_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','no',34)
-low_IFG_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','yes',34)
-high_IFG_no_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','no',34)
-high_IFG_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','yes',34)
-IGT_no_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','no',34)
-IGT_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','yes',34)
-IFG_IGT_no_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','no',34)
-IFG_IGT_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','yes',34)
+#pre_diabetic_no_intervention<-(low_IFG_no_intervention+high_IFG_no_intervention+IGT_no_intervention+IFG_IGT_no_intervention)[c(1,4,5),]
 
-pre_diabetic_no_intervention<-(low_IFG_no_intervention+high_IFG_no_intervention+IGT_no_intervention+IFG_IGT_no_intervention)[c(1,4,5),]
-
-pre_diabetic_intervention<-(low_IFG_intervention+high_IFG_intervention+IGT_intervention+IFG_IGT_intervention)[c(1,4,6,7),]
+#pre_diabetic_intervention<-(low_IFG_intervention+high_IFG_intervention+IGT_intervention+IFG_IGT_intervention)[c(1,4,6,7),]
 
 
 #Take information from all of these tables and put it into the final ROI table
@@ -288,6 +288,7 @@ ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,progr
     cost_intervention<-treatment_cost*pre_diabetic_intervention[4,i]
     cost_avoidance<-commitment_adjusted_incurred*treatment_cost
     #Healthcost currently isn't changing year to year... but it probably should right?
+    ##Healthcost is multiplying the cost as a 5 year cost (so annual figures at 1/5 of the total) but that doesn't make a ton of sense--- it only costs $150 to treat someone for 5 years?
     annual_intervention<-intervention_cost*pre_diabetic_intervention[1,i]
     cumulative_intervention<-cumulative_intervention+annual_intervention
     cumulative_ROI<-(cost_avoidance/cumulative_intervention)
@@ -301,5 +302,5 @@ ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,progr
   return(output_table)
 }
 
-ROI_final<-ROI_table(pre_diabetic_no_intervention,pre_diabetic_intervention,.4,.03,10000,150)
-rownames(ROI_final) <- str_replace_all(rownames(ROI_final),"\\s+","_")
+# ROI_final<-ROI_table(pre_diabetic_no_intervention,pre_diabetic_intervention,.4,.03,10000,150)
+# rownames(ROI_final) <- str_replace_all(rownames(ROI_final),"\\s+","_")

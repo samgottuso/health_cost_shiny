@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1507923866348.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "734D1C6A",
+    "lastKnownWriteTime" : 2484628536874007931,
+    "last_content_update" : 1507923866348,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "239D0080",
+        "caption" : "pre_diabetic_no_intervention",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=pre_diabetic_no_intervention&cache_key=239D0080",
+        "displayedObservations" : 3,
+        "environment" : "",
+        "object" : "pre_diabetic_no_intervention",
+        "preview" : 0,
+        "totalObservations" : 3,
+        "variables" : 5
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

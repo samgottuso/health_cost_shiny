@@ -1,4 +1,4 @@
-
+  
 # This is the user-interface definition of a Shiny web application.
 # You can find out more about building applications with Shiny here:
 #
@@ -21,11 +21,11 @@ shinyUI(
                                                           wellPanel(
                                                                     fluidRow(
                                                                       column(6,
-                                                                     selectInput('ageSelect', width = '100px', label = "Age", choices = c("20-39","40-59", "60+", "All Ages")),
+                                                                     selectInput('ageSelect', width = '100px', label = "Age", choices = c("20-39","40-59", "60+", "All Ages"),selected = "All Ages"),
                                                              
-                                                                     selectInput('raceSelect', width = '100px', label = "Race", choices = c("Hispanic","White", "Black", "Asian","All Races"))),
+                                                                     selectInput('raceSelect', width = '100px', label = "Race", choices = c("Hispanic","White", "Black", "Asian","All Races"),selected = "All Races")),
                                                                       column(6,
-                                                                     selectInput('genderSelect',width = '100px', label = "Gender", choices = c("Male","Female","Both Genders")),
+                                                                     selectInput('genderSelect',width = '100px', label = "Gender", choices = c("Male","Female","Both Genders"),selected="Both Genders"),
                       
                                                                      selectInput('popSelect', width = '100px', label = "Pop. Estimate", choices = c("High","Base", "Low")))
                                                             )))

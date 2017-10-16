@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource('carouselPanel.R')\n\nshinyUI(\n  fluidPage(theme = \"styles.css\",\n            navbarPage(\"Chronic Disease\",\n                       tabPanel(\"Engine\", value = \"Engine\",\n                                fluidPage(id = \"diabetes_panel\",\n                                          fluidRow(\n                                            column(8,\n                                                   wellPanel( \n                                                     plotOutput(outputId = \"cost_per_patient\",height = \"200px\"))),\n                                                   column(4, \n                                                          wellPanel(\n                                                                    fluidRow(\n                                                                      column(6,\n                                                                     selectInput('ageSelect', width = '100px', label = \"Age\", choices = c(\"20-39\",\"40-59\", \"60+\", \"All Ages\")),\n                                                             \n                                                                     selectInput('raceSelect', width = '100px', label = \"Race\", choices = c(\"Hispanic\",\"White\", \"Black\", \"Asian\",\"All Races\"))),\n                                                                      column(6,\n                                                                     selectInput('genderSelect',width = '100px', label = \"Gender\", choices = c(\"Male\",\"Female\",\"Both Genders\")),\n                      \n                                                                     selectInput('popSelect', width = '100px', label = \"Pop. Estimate\", choices = c(\"High\",\"Base\", \"Low\")))\n                                                            )))\n                                                   \n                                            ),\n                                            fluidRow(\n                                              column(7,\n                                                     wellPanel(\"Reduction in Average BMI\")\n                                              ),\n                                              column(5,\n                                                     wellPanel(textOutput(\"vis\"))\n                                              ))\n                                          )),\n                                tabPanel(\"New\", value = \"new\")\n                       )\n  )\n)\n",
+    "created" : 1507922656406.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "665160946",
+    "id" : "C3AF401C",
+    "lastKnownWriteTime" : 1507840594,
+    "last_content_update" : 1507840594,
+    "path" : "~/Health_cost_shiny/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

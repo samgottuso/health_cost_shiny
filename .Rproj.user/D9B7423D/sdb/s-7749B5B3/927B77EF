@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1507922754427.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "927B77EF",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1507922754427,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "420772C9",
+        "caption" : "ROI_final",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ROI_final&cache_key=420772C9",
+        "displayedObservations" : 11,
+        "environment" : "",
+        "object" : "ROI_final",
+        "preview" : 0,
+        "totalObservations" : 11,
+        "variables" : 5
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

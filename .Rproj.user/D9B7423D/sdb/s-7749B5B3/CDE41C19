@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nlibrary(dplyr)\nlibrary(reshape2)\nlibrary(ggplot2)\nlibrary(ggthemes)\n\nshinyServer(function(input, output) {\n  output$vis <- renderText({\n    raceSelected <- input$raceSelect\n    ageSelected <- input$ageSelect\n    genderSelected <- input$genderSelect\n    popSelected <- input$popSelect\n    paste(raceSelected, \",\", ageSelected, \",\", genderSelected, \",\", popSelected)\n  })\n  \n  ##setting up the data in the server \n  \n  \n  \n  \n  #renderplot\n  output$cost_per_patient <- renderPlot({\n  myrows = c(\"Cost_without_intervention\",\"Cost_with_intervention\")\n  tempData <- staticDat()\n  tempData<-tempData[myrows,]\n  colnames(tempData) <- c (\"2016\", \"2017\", \"2018\",\"2019\", \"2020\")\n  tempData <- rbind(colnames(tempData), tempData)\n  rownames(tempData)[1]<-\"Year\"\n  tempData <- t(tempData)\n  tempData <- as.data.frame(tempData)\n  tempData$Cost_without_intervention <- as.numeric(as.character(tempData$Cost_without_intervention))/1000000.0\n  tempData$Cost_with_intervention <- as.numeric(as.character(tempData$Cost_with_intervention))/1000000.0\n  tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)\n  ggplot(data = tempData, aes(x = Year, y = value)) + geom_bar(aes(fill = variable),stat = \"identity\", position = \"dodge\") +\n   xlab(\"Year\") + ylab(\"dollars in millions\") + theme_fivethirtyeight() + ggtitle(\"Diabetes Treatment Costs\")\n  })\n})\n",
+    "created" : 1507922712413.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1427813486",
+    "id" : "CDE41C19",
+    "lastKnownWriteTime" : 1507927638,
+    "last_content_update" : 1507927638252,
+    "path" : "~/Health_cost_shiny/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
