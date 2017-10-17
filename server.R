@@ -10,6 +10,7 @@ library(dplyr)
 library(reshape2)
 library(ggplot2)
 library(ggthemes)
+library(scales)
 
 shinyServer(function(input, output) {
   output$vis <- renderText({
@@ -51,11 +52,11 @@ shinyServer(function(input, output) {
   rownames(tempData)[1]<-"Year"
   tempData <- t(tempData)
   tempData <- as.data.frame(tempData)
-  tempData$Cost_without_intervention <- as.numeric(as.character(tempData$Cost_without_intervention))/1000000.0
-  tempData$Cost_with_intervention <- as.numeric(as.character(tempData$Cost_with_intervention))/1000000.0
+  tempData$Cost_without_intervention <- round(as.numeric(as.character(tempData$Cost_without_intervention)), 0)
+  tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
   tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
   ggplot(data = tempData, aes(x = Year, y = value)) + geom_bar(aes(fill = variable),stat = "identity", position = "dodge") +
-   xlab("Year") + ylab("dollars in millions") + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
+    scale_y_continuous(labels=dollar_format(prefix="$"))+  scale_color_manual(labels = c("Cost W Intervention", "Cost W/o Intervention"), values = c("blue", "red")) + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
   })
 })
 
