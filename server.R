@@ -19,14 +19,8 @@ shinyServer(function(input, output) {
     popSelected <- input$popSelect
     paste(raceSelected, ",", ageSelected, ",", genderSelected, ",", popSelected)
   })
-  
-  
-  
-  
-  #renderplot
-  output$cost_per_patient <- renderPlot({
-    
-    #Data setup-- is there a way to do this outside of the renderplot function so that multiple plots can reference it?
+  #reactive function means that anytime ROI_final changes, the data will be updated. access with ROI_final()
+  ROI_final <- reactive ({
     low_IFG_no_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
     low_IFG_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','yes',34)
     high_IFG_no_intervention<-case_analysis(high_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
@@ -43,9 +37,14 @@ shinyServer(function(input, output) {
     
     ROI_final<-ROI_table(pre_diabetic_no_intervention,pre_diabetic_intervention,.4,.03,10000,150)
     rownames(ROI_final) <- str_replace_all(rownames(ROI_final),"\\s+","_")
-    
+    ROI_final
+  })
+  
+  
+  #renderplot
+  output$cost_per_patient <- renderPlot({
   myrows = c("Cost_without_intervention","Cost_with_intervention")
-  tempData <- ROI_final
+  tempData <- ROI_final()
   tempData<-tempData[myrows,]
   colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
   tempData <- rbind(colnames(tempData), tempData)

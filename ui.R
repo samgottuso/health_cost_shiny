@@ -14,10 +14,10 @@ shinyUI(
                        tabPanel("Engine", value = "Engine",
                                 fluidPage(id = "diabetes_panel",
                                           fluidRow(
-                                            column(8,
+                                            column(7,
                                                    wellPanel( 
                                                      plotOutput(outputId = "cost_per_patient",height = "200px"))),
-                                                   column(4, 
+                                                   column(5, 
                                                           wellPanel(
                                                                     fluidRow(
                                                                       column(6,
