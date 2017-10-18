@@ -15,8 +15,10 @@ shinyUI(
                                 fluidPage(id = "diabetes_panel",
                                           fluidRow(
                                             column(7,
-                                                   wellPanel( 
-                                                     plotOutput(outputId = "cost_per_patient",height = "200px"))),
+                                                   wellPanel(id = "carouselPan",
+                                                     carouselPanel(auto.advance = F,
+                                                                   plotOutput(outputId = "cost_per_patient",height = "200px"),
+                                                                   plotOutput(outputId = "annual_spend", height = '200px')))),
                                                    column(5, 
                                                           wellPanel(
                                                                     fluidRow(

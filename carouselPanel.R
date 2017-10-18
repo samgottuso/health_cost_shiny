@@ -20,7 +20,7 @@ top: auto;
 list-style: none outside none;
 margin: 0;
 position: absolute;
-right: 70px;
+right: 0px;
 z-index: 5;
 }
 .carousel-control {
@@ -53,9 +53,9 @@ top: auto;
     div(id=paste0("carousel-", n), class="carousel slide", `data-interval`=tolower(as.character(auto.advance)),
         # Carousel Inner Div - contains the content to display
         div(class="carousel-inner",
-            div(class="item active", contents[[1]], style="padding: 0px 70px;"),
+            div(class="item active", contents[[1]], style="padding: 0px 0px;"),
             mapply(function(elm){
-              list(div(class="item", elm, style="padding: 0px 70px;"))
+              list(div(class="item", elm, style="padding: 0px 0px;"))
             }, contents[2:length(contents)], SIMPLIFY=F, USE.NAMES=F)),
         
         # Carousel controls

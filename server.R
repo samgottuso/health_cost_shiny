@@ -56,7 +56,20 @@ shinyServer(function(input, output) {
   tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
   tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
   ggplot(data = tempData, aes(x = Year, y = value)) + geom_bar(aes(fill = variable),stat = "identity", position = "dodge") +
-    scale_y_continuous(labels=dollar_format(prefix="$"))+  scale_color_manual(labels = c("Cost W Intervention", "Cost W/o Intervention"), values = c("blue", "red")) + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
+    scale_y_continuous(labels=dollar_format(prefix="$"))+ scale_color_manual(labels = c("Cost W Intervention", "Cost W/o Intervention"), values = c("blue", "red")) + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
+  })
+  output$annual_spend <- renderPlot({
+    staticDat <- ROI_final()
+    myrows = c("Annual_Intervention_Spending")
+    tempData <- staticDat[myrows,]
+    colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
+    tempData <- rbind(colnames(tempData), tempData)
+    rownames(tempData)[1]<-"Year"
+    tempData <- t(tempData)
+    tempData <- as.data.frame(tempData)
+    tempData$Annual_Intervention_Spending <- round(as.numeric(as.character(tempData$Annual_Intervention_Spending)), 0)
+    ggplot(data = tempData, aes(x = Year, y = Annual_Intervention_Spending)) + geom_bar(stat = 'identity', position = 'dodge') +
+      theme_fivethirtyeight() + scale_y_continuous(labels=dollar_format(prefix="$"))+ ggtitle("Annual Intervention Spending")
   })
 })
 
