@@ -35,7 +35,8 @@ shinyUI(
                                             ),
                                             fluidRow(
                                               column(7,
-                                                     wellPanel("Reduction in Average BMI")
+                                                     wellPanel("Case Avoidance Per Year"),
+                                                     plotOutput(outputId="cases_avoided_per_year",height = "300px")
                                               ),
                                               column(5,
                                                      wellPanel(textOutput("vis"))

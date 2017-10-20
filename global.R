@@ -246,18 +246,18 @@ case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,
 }
 
 #These are for developing, putting them into server.R for interactives 
-# low_IFG_no_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','no',34)
-# low_IFG_intervention<-case_analysis(low_IFG,'all ages','all races','both genders','high','yes',34)
-# high_IFG_no_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','no',34)
-# high_IFG_intervention<-case_analysis(high_IFG,'all ages','all races','both genders','high','yes',34)
-# IGT_no_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','no',34)
-# IGT_intervention<-case_analysis(IGT,'all ages','all races','both genders','high','yes',34)
-# IFG_IGT_no_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','no',34)
-# IFG_IGT_intervention<-case_analysis(IFG_IGT,'all ages','all races','both genders','high','yes',34)
+low_IFG_no_intervention_dev<-case_analysis(low_IFG,'All Ages','All Races','Both Genders','high','no',34)
+low_IFG_intervention_dev<-case_analysis(low_IFG,'All Ages','All Races','Both Genders','high','yes',34)
+high_IFG_no_intervention_dev<-case_analysis(high_IFG,'All Ages','All Races','Both Genders','high','no',34)
+high_IFG_intervention_dev<-case_analysis(high_IFG,'All Ages','All Races','Both Genders','high','yes',34)
+IGT_no_intervention_dev<-case_analysis(IGT,'All Ages','All Races','Both Genders','high','no',34)
+IGT_intervention_dev<-case_analysis(IGT,'All Ages','All Races','Both Genders','high','yes',34)
+IFG_IGT_no_intervention_dev<-case_analysis(IFG_IGT,'All Ages','All Races','Both Genders','high','no',34)
+IFG_IGT_intervention_dev<-case_analysis(IFG_IGT,'All Ages','All Races','Both Genders','high','yes',34)
 
-#pre_diabetic_no_intervention<-(low_IFG_no_intervention+high_IFG_no_intervention+IGT_no_intervention+IFG_IGT_no_intervention)[c(1,4,5),]
+pre_diabetic_no_intervention_dev<-(low_IFG_no_intervention_dev+high_IFG_no_intervention_dev+IGT_no_intervention_dev+IFG_IGT_no_intervention_dev)[c(1,4,5),]
 
-#pre_diabetic_intervention<-(low_IFG_intervention+high_IFG_intervention+IGT_intervention+IFG_IGT_intervention)[c(1,4,6,7),]
+pre_diabetic_intervention_dev<-(low_IFG_intervention_dev+high_IFG_intervention_dev+IGT_intervention_dev+IFG_IGT_intervention_dev)[c(1,4,6,7),]
 
 
 #Take information from all of these tables and put it into the final ROI table
@@ -302,5 +302,5 @@ ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,progr
   return(output_table)
 }
 
-# ROI_final<-ROI_table(pre_diabetic_no_intervention,pre_diabetic_intervention,.4,.03,10000,150)
-# rownames(ROI_final) <- str_replace_all(rownames(ROI_final),"\\s+","_")
+ROI_final_dev<-ROI_table(pre_diabetic_no_intervention_dev,pre_diabetic_intervention_dev,.4,.03,10000,150)
+rownames(ROI_final_dev) <- str_replace_all(rownames(ROI_final_dev),"\\s+","_")

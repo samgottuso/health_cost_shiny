@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
   })
   
   
-  #renderplot
+  #renderplot cost per patient
   output$cost_per_patient <- renderPlot({
   myrows = c("Cost_without_intervention","Cost_with_intervention")
   tempData <- ROI_final()
@@ -58,6 +58,8 @@ shinyServer(function(input, output) {
   ggplot(data = tempData, aes(x = Year, y = value)) + geom_bar(aes(fill = variable),stat = "identity", position = "dodge") +
     scale_y_continuous(labels=dollar_format(prefix="$"))+ scale_color_manual(labels = c("Cost W Intervention", "Cost W/o Intervention"), values = c("blue", "red")) + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
   })
+  
+  #Anual Spend
   output$annual_spend <- renderPlot({
     staticDat <- ROI_final()
     myrows = c("Annual_Intervention_Spending")
@@ -71,5 +73,39 @@ shinyServer(function(input, output) {
     ggplot(data = tempData, aes(x = Year, y = Annual_Intervention_Spending)) + geom_bar(stat = 'identity', position = 'dodge') +
       theme_fivethirtyeight() + scale_y_continuous(labels=dollar_format(prefix="$"))+ ggtitle("Annual Intervention Spending")
   })
+  
+  #Case Avoidance
+  output$cases_avoided_per_year<-renderPlot({
+    ROI_df<-ROI_final_dev
+    ROI_df<-ROI_df[c(1,2),]
+    ROI_df<-t(ROI_df)
+    ROI_df<-as.data.frame(ROI_df)
+    ROI_df<-cbind(ROI_df,c("2016", "2017", "2018","2019", "2020"))
+    colnames(ROI_df)<-c("Cases Avoided with Intervention","Incurred Case Avoidance",'Year')
+    ROI_df_long<-melt(ROI_df,id.vars=("Year"))
+    colnames(ROI_df_long)<-c("Year","Category",'Value')
+    
+    Spending_df<-ROI_final_dev
+    Spending_df<-Spending_df[c(9,10),]
+    #Not sure how to describe it, but it works! Try to figure out how to divide by number of patients maybe?
+    Spending_df<-mapply(function(x,y) x/y,Spending_df,10000)
+    Spending_df<-t(Spending_df)
+    Spending_df<-as.data.frame(Spending_df)
+    Spending_df<-cbind(Spending_df,c("2016", "2017", "2018","2019", "2020"))
+    colnames(Spending_df)<-c("Annual Spending","Cumulative Spending","Year")
+    Spending_df_long<-melt(Spending_df,id.vars="Year")
+    colnames(Spending_df_long)<-c("Year","Spending Category","Spending")
+    
+    
+    
+    plot<-ggplot()
+    plot<-plot+geom_bar(data = ROI_df_long, aes(Year,y=Value,fill=Category),stat = 'identity',position = 'dodge')+theme_fivethirtyeight()+labs(y="Number of Cases")+ggtitle("Cases Avoided by Year with Cost")
+    
+    plot<-plot+geom_line(data=Spending_df_long,aes(Year,Spending,colour=Spending_df_long$`Spending Category`,group=Spending_df_long$`Spending Category`),stat = 'identity')
+    
+    plot
+  })
+  
+  
 })
 
