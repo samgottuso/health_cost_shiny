@@ -22,14 +22,19 @@ shinyUI(
                                                    column(5, 
                                                           wellPanel(
                                                                     fluidRow(
-                                                                      column(6,
+                                                                      column(4,
                                                                      selectInput('ageSelect', width = '100px', label = "Age", choices = c("20-39","40-59", "60+", "All Ages"),selected = "All Ages"),
                                                              
                                                                      selectInput('raceSelect', width = '100px', label = "Race", choices = c("Hispanic","White", "Black", "Asian","All Races"),selected = "All Races")),
-                                                                      column(6,
+                                                                      column(4,
                                                                      selectInput('genderSelect',width = '100px', label = "Gender", choices = c("Male","Female","Both Genders"),selected="Both Genders"),
                       
-                                                                     selectInput('popSelect', width = '100px', label = "Pop. Estimate", choices = c("High","Base", "Low")))
+                                                                     selectInput('popSelect', width = '100px', label = "Pop. Estimate", choices = c("High","Base", "Low"))),
+                                                                      
+                                                                     column(4,
+                                                                     selectInput('popDFSelect',width = '100px', label = "Population Model", choices = c("Baltimore","Kings County"))
+                                                                    )
+                                                                     
                                                             )))
                                                    
                                             ),
