@@ -11,7 +11,8 @@ library(reshape2)
 library(ggplot2)
 library(ggthemes)
 library(scales)
-
+# 3 blue, one gray, one light green, bright green, red
+ myPalette <- c ("#253746", "#0a5157", "#87af9a", "#0ea6b5", "#56565b", "#73aa4f", "#d54728")
 shinyServer(function(input, output) {
   output$vis <- renderText({
     raceSelected <- input$raceSelect
@@ -55,8 +56,13 @@ shinyServer(function(input, output) {
   tempData$Cost_without_intervention <- round(as.numeric(as.character(tempData$Cost_without_intervention)), 0)
   tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
   tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
-  ggplot(data = tempData, aes(x = Year, y = value)) + geom_bar(aes(fill = variable),stat = "identity", position = "dodge") +
-    scale_y_continuous(labels=dollar_format(prefix="$"))+ scale_color_manual(labels = c("Cost W Intervention", "Cost W/o Intervention"), values = c("blue", "red")) + theme_fivethirtyeight() + ggtitle("Diabetes Treatment Costs")
+     ggplot(data = tempData, aes(x = Year, y = value)) +
+     geom_bar(aes(fill = variable),stat = "identity", position = "dodge")+
+     scale_y_continuous(labels=dollar_format(prefix="$")) + 
+     ggtitle("Diabetes Treatment Costs") + 
+     theme(legend.title=element_blank()) + 
+     labs(x = "Year", y = "Cost")+
+     scale_fill_manual(values=c(myPalette[3], myPalette[4]))
   })
   
   #Anual Spend
@@ -70,13 +76,16 @@ shinyServer(function(input, output) {
     tempData <- t(tempData)
     tempData <- as.data.frame(tempData)
     tempData$Annual_Intervention_Spending <- round(as.numeric(as.character(tempData$Annual_Intervention_Spending)), 0)
-    ggplot(data = tempData, aes(x = Year, y = Annual_Intervention_Spending)) + geom_bar(stat = 'identity', position = 'dodge') +
-      theme_fivethirtyeight() + scale_y_continuous(labels=dollar_format(prefix="$"))+ ggtitle("Annual Intervention Spending")
+    ggplot(data = tempData, aes(x = Year, y = Annual_Intervention_Spending))+
+      geom_bar(stat = 'identity', position = 'dodge', fill = myPalette[1])+
+      scale_y_continuous(labels=dollar_format(prefix="$"))+
+      ggtitle("Annual Intervention Spending")+
+      labs(x = "Year", y = "Spending")
   })
   
   #Case Avoidance
   output$cases_avoided_per_year<-renderPlot({
-    ROI_df<-ROI_final_dev
+    ROI_df<-ROI_final()
     ROI_df<-ROI_df[c(1,2),]
     ROI_df<-t(ROI_df)
     ROI_df<-as.data.frame(ROI_df)
@@ -85,7 +94,7 @@ shinyServer(function(input, output) {
     ROI_df_long<-melt(ROI_df,id.vars=("Year"))
     colnames(ROI_df_long)<-c("Year","Category",'Value')
     
-    Spending_df<-ROI_final_dev
+    Spending_df<-ROI_final()
     Spending_df<-Spending_df[c(9,10),]
     #Not sure how to describe it, but it works! Try to figure out how to divide by number of patients maybe?
     Spending_df<-mapply(function(x,y) x/y,Spending_df,10000)
@@ -99,9 +108,13 @@ shinyServer(function(input, output) {
     
     
     plot<-ggplot()
-    plot<-plot+geom_bar(data = ROI_df_long, aes(Year,y=Value,fill=Category),stat = 'identity',position = 'dodge')+theme_fivethirtyeight()+labs(y="Number of Cases")+ggtitle("Cases Avoided by Year with Cost")
+    plot<-plot+geom_bar(data = ROI_df_long, aes(Year,y=Value,fill=Category),stat = 'identity',position = 'dodge')+
+      labs(y="Number of Cases")+ggtitle("Cases Avoided by Year with Cost")+
+      scale_fill_manual(values=c(myPalette[4], myPalette[5]))
     
-    plot<-plot+geom_line(data=Spending_df_long,aes(Year,Spending,colour=Spending_df_long$`Spending Category`,group=Spending_df_long$`Spending Category`),stat = 'identity')
+    plot<-plot+geom_line(data=Spending_df_long,aes(Year,Spending,colour=Spending_df_long$`Spending Category`, group=Spending_df_long$`Spending Category`),stat = 'identity')+
+      labs(colour = "Spending Category")+
+      scale_color_manual(values=c(myPalette[3], myPalette[6]))
     
     plot
   })
