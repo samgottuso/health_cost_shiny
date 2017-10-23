@@ -23,14 +23,30 @@ shinyServer(function(input, output) {
   })
   #reactive function means that anytime ROI_final changes, the data will be updated. access with ROI_final()
   ROI_final <- reactive ({
-    low_IFG_no_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
-    low_IFG_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','yes',34)
-    high_IFG_no_intervention<-case_analysis(high_IFG,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
-    high_IFG_intervention<-case_analysis(high_IFG,input$ageSelect,input$raceSelect,input$genderSelect, 'high','yes',34)
-    IGT_no_intervention<-case_analysis(IGT,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
-    IGT_intervention<-case_analysis(IGT,input$ageSelect,input$raceSelect,input$genderSelect,'high','yes',34)
-    IFG_IGT_no_intervention<-case_analysis(IFG_IGT,input$ageSelect,input$raceSelect,input$genderSelect,'high','no',34)
-    IFG_IGT_intervention<-case_analysis(IFG_IGT,input$ageSelect,input$raceSelect,input$genderSelect,'high','yes',34)
+    
+    value_list<-healthcost_values_diabetes(input$popDFSelect,input$popSelect)
+    
+    
+    low_IFG_<-value_DF_creator(value_list,1)
+    colnames(low_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
+    high_IFG<-value_DF_creator(value_list,2)
+    colnames(high_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
+    IGT<-value_DF_creator(value_list,3)
+    colnames(IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
+    IFG_IGT<-value_DF_creator(value_list,4)
+    colnames(IFG_IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
+    
+    pre_diabetic_population<-low_IFG+high_IFG+IGT+IFG_IGT
+    
+    
+    low_IFG_no_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'no',34)
+    low_IFG_intervention<-case_analysis(low_IFG,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'yes',34)
+    high_IFG_no_intervention<-case_analysis(high_IFG,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'no',34)
+    high_IFG_intervention<-case_analysis(high_IFG,input$ageSelect,input$raceSelect,input$genderSelect, input$popSelect,'yes',34)
+    IGT_no_intervention<-case_analysis(IGT,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'no',34)
+    IGT_intervention<-case_analysis(IGT,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'yes',34)
+    IFG_IGT_no_intervention<-case_analysis(IFG_IGT,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'no',34)
+    IFG_IGT_intervention<-case_analysis(IFG_IGT,input$ageSelect,input$raceSelect,input$genderSelect,input$popSelect,'yes',34)
     
     
     pre_diabetic_no_intervention<-(low_IFG_no_intervention+high_IFG_no_intervention+IGT_no_intervention+IFG_IGT_no_intervention)[c(1,4,5),]
@@ -96,7 +112,6 @@ shinyServer(function(input, output) {
     
     Spending_df<-ROI_final()
     Spending_df<-Spending_df[c(9,10),]
-    #Not sure how to describe it, but it works! Try to figure out how to divide by number of patients maybe?
     Spending_df<-mapply(function(x,y) x/y,Spending_df,10000)
     Spending_df<-t(Spending_df)
     Spending_df<-as.data.frame(Spending_df)

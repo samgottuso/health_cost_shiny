@@ -39,7 +39,7 @@ rownames(KC_DF)<-c("20-39","40-59","60+")
 #Possible Grace ask--- interactive formula that takes a total population and the % of minorities of each (slider input?) and then spits out a working DF in our format
 
 ###Function that takes the initial population and gives a huge list which can be sorted out to make seperate DFs, using diabetes engine... if hypertension engine is in the same format then just modify this to accept disease type as a argument
-healthcost_values_diabetes<-function(population,pop_estimate){
+healthcost_values_diabetes<-function(population_select,pop_estimate){
   ##creating the tables that are on the Engine-Diabetes tab
   #doing the multiplication and assigning
   
@@ -53,8 +53,16 @@ healthcost_values_diabetes<-function(population,pop_estimate){
   # calculated_df[,i]<-(column_i)
   #   }
   
+  
+  
+  if(population_select=="Baltimore"){
+    population<-bmore_DF
+  }else if(population_select=="Kings County"){
+    population<-KC_DF
+  }
+  
   ##New Way
-  if(pop_estimate=="base"){
+  if(pop_estimate=="Base"){
     pop_estimate_list<-c()
     for(i in 1:8){
       for(j in 1:3){
@@ -64,7 +72,7 @@ healthcost_values_diabetes<-function(population,pop_estimate){
         pop_estimate_list<-append(pop_estimate_list,(population[j,i]*diabetes_engine[((i*3)-(3-j)),4]))
       }
     }
-  }else if(pop_estimate=="high"){
+  }else if(pop_estimate=="High"){
     pop_estimate_list<-c()
     for(i in 1:8){
       for(j in 1:3){
@@ -74,7 +82,7 @@ healthcost_values_diabetes<-function(population,pop_estimate){
         pop_estimate_list<-append(pop_estimate_list,(population[j,i]*diabetes_engine[((i*3)-(3-j)),8]))
       }
     }
-  }else if(pop_estimate=="low"){
+  }else if(pop_estimate=="Low"){
     pop_estimate_list<-c()
     for(i in 1:8){
       for(j in 1:3){
@@ -93,7 +101,7 @@ healthcost_values_diabetes<-function(population,pop_estimate){
 
 ##Create all the different DFs (Low_IGF, High_IGF, IGT, IGF+IGT) first as a giant list (in healthcost_values_diabetes) and then use value_DF_Creator to turn them into seperate DFs---- 
 
-value_list<-healthcost_values_diabetes(bmore_DF,'high')
+value_list_dev<-healthcost_values_diabetes('Baltimore','High')
 
 value_DF_creator<-function(list,number_table){
   paired_list<-c()
@@ -104,16 +112,16 @@ value_DF_creator<-function(list,number_table){
   return(out_DF)
 }
 
-low_IFG<-value_DF_creator(value_list,1)
+low_IFG<-value_DF_creator(value_list_dev,1)
 colnames(low_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
-high_IFG<-value_DF_creator(value_list,2)
+high_IFG<-value_DF_creator(value_list_dev,2)
 colnames(high_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
-IGT<-value_DF_creator(value_list,3)
+IGT<-value_DF_creator(value_list_dev,3)
 colnames(IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
 IFG_IGT<-value_DF_creator(value_list,4)
 colnames(IFG_IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
 
-pre_diabetic_population<-low_IFG+high_IFG+IGT+IFG_IGT
+pre_diabetic_population_dev<-low_IFG+high_IFG+IGT+IFG_IGT
 
 ##take those DFS to create the case analysis tables
 
@@ -191,8 +199,7 @@ case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,
   BMI_list<-c(33,32,31.0,30,29)
   
   
-  ##works up to here
-  
+
   
   if(intervention=='yes'){
     #Intervention
