@@ -134,6 +134,39 @@ shinyServer(function(input, output) {
     
     plot
   })
+  #Cost Avoidance
+  output$ttl_cost_avoid <- renderPlot({
+    staticDat<-ROI_final()
+    tempData <- staticDat[8,]
+    colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
+    tempData <- rbind(colnames(tempData), tempData)
+    rownames(tempData) <-c ("Year", "Incurred_Cost_Avoidance")
+    tempData <- t(tempData)
+    tempData <- as.data.frame(tempData)
+    tempData$Incurred_Cost_Avoidance <- round(as.numeric(as.character(tempData$Incurred_Cost_Avoidance)), 0)
+    ggplot(data = tempData, aes(x = Year, y = Incurred_Cost_Avoidance))+
+      geom_bar(stat = 'identity', position = 'dodge', fill = myPalette[2])+
+      scale_y_continuous(labels=dollar_format(prefix="$"))+
+      ggtitle("Incurred Costs Avoided")+geom_text(aes(label=Incurred_Cost_Avoidance))+
+      labs(x = "Year", y = "Thousands")
+    
+  })
+  output$roi <- renderPlot({
+    staticDat<-ROI_final()
+    tempData <- staticDat[11,]
+    colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
+    tempData <- rbind(colnames(tempData), tempData)
+    rownames(tempData) <-c ("Year", "Cumulative_ROI")
+    tempData <- t(tempData)
+    tempData <- as.data.frame(tempData)
+    tempData$Cumulative_ROI <-round(as.numeric(as.character(tempData$Cumulative_ROI))*100, 1)
+    ggplot(data = tempData, aes(x = Year, y = Cumulative_ROI))+
+      geom_bar(stat = 'identity', position = 'dodge', fill = myPalette[2])+
+      ggtitle("Cumulative ROI")+geom_text(aes(label=Cumulative_ROI))+
+      scale_y_continuous(labels=percent_format())+
+      labs(x = "Year", y = "Percent")
+    
+  })
   
   
 })

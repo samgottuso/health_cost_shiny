@@ -14,7 +14,7 @@ shinyUI(
                        tabPanel("Engine", value = "Engine",
                                 fluidPage(id = "diabetes_panel",
                                           fluidRow(
-                                            column(2, offset= 1,
+                                            column(1, 
                                                      dropdownButton(
                                                        fluidRow(
                                                          column(6,
@@ -35,23 +35,28 @@ shinyUI(
                                                        tooltip = tooltipOptions(title = "Inputs")
                                                      )
                                                    ),
-                                                   column(9,
+                                                   column(10,
                                                           wellPanel(id = "carouselPan",
                                                                     carouselPanel(auto.advance = F,
-                                                                                  plotOutput(outputId = "cost_per_patient",height = "200px"),
-                                                                                  plotOutput(outputId = "annual_spend", height = '200px'))))
+                                                                                  plotOutput(outputId = "cases_avoided_per_year",height = "200px"),
+                                                                                  plotOutput(outputId = "ttl_cost_avoid", height = '200px'),
+                                                                                  plotOutput(outputId = "roi", height = '200px')
+                                                                                  )))
                                                           
                                             ),
                                             fluidRow(
-                                              column(7,
+                                              column(6,
                                                      wellPanel(
-                                                     plotOutput(outputId="cases_avoided_per_year",height = "200px"))
-                                              ),
-                                              column(5,
-                                                     wellPanel(textOutput("vis"))
-                                              ))
-                                          )),
+                                                     plotOutput(outputId = "annual_spend", height = "200px")
+                                                     
+                                              )),
+                                              column(6,
+                                                     wellPanel(
+                                                     plotOutput(outputId = "cost_per_patient", height = '200px')
+                                              )))
+                                            )),
+                                           
                                 tabPanel("New", value = "new")
                        )
   )
-)
+  )
