@@ -14,29 +14,33 @@ shinyUI(
                        tabPanel("Engine", value = "Engine",
                                 fluidPage(id = "diabetes_panel",
                                           fluidRow(
-                                            column(7,
-                                                   wellPanel(id = "carouselPan",
-                                                     carouselPanel(auto.advance = F,
-                                                                   plotOutput(outputId = "cost_per_patient",height = "200px"),
-                                                                   plotOutput(outputId = "annual_spend", height = '200px')))),
-                                                   column(5, 
-                                                          wellPanel(
-                                                                    fluidRow(
-                                                                      column(4,
-                                                                     selectInput('ageSelect', width = '100px', label = "Age", choices = c("20-39","40-59", "60+", "All Ages"),selected = "All Ages"),
-                                                             
-                                                                     selectInput('raceSelect', width = '100px', label = "Race", choices = c("Hispanic","White", "Black", "Asian","All Races"),selected = "All Races")),
-                                                                      column(4,
-                                                                     selectInput('genderSelect',width = '100px', label = "Gender", choices = c("Male","Female","Both Genders"),selected="Both Genders"),
-                      
-                                                                     selectInput('popSelect', width = '100px', label = "Pop. Estimate", choices = c("High","Base", "Low"))),
-                                                                      
-                                                                     column(4,
-                                                                     selectInput('popDFSelect',width = '100px', label = "Population Model", choices = c("Baltimore","Kings County"))
-                                                                    )
-                                                                     
-                                                            )))
-                                                   
+                                            column(2, offset= 1,
+                                                     dropdownButton(
+                                                       fluidRow(
+                                                         column(6,
+                                                       selectInput(inputId = 'ageSelect', width = '120px', label = "Age", choices = c("20-39","40-59", "60+", "All Ages"),selected = "All Ages")
+                                                       ),
+                                                        column(6,
+                                                       selectInput(inputId = 'raceSelect', width = '120px', label = "Race", choices = c("Hispanic","White", "Black", "Asian","All Races"),selected = "All Races")
+                                                       )),
+                                                       fluidRow(
+                                                         column(6,
+                                                       selectInput(inputId = 'genderSelect',width = '120px', label = "Gender", choices = c("Male","Female","Both Genders"),selected="Both Genders")
+                                                       ),
+                                                       column(6,
+                                                       selectInput(inputId = 'popSelect', width = '120px', label = "Pop. Estimate", choices = c("High","Base", "Low"))
+                                                       )),
+                                                       selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County")),
+                                                       circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
+                                                       tooltip = tooltipOptions(title = "Inputs")
+                                                     )
+                                                   ),
+                                                   column(9,
+                                                          wellPanel(id = "carouselPan",
+                                                                    carouselPanel(auto.advance = F,
+                                                                                  plotOutput(outputId = "cost_per_patient",height = "200px"),
+                                                                                  plotOutput(outputId = "annual_spend", height = '200px'))))
+                                                          
                                             ),
                                             fluidRow(
                                               column(7,

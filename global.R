@@ -3,6 +3,7 @@
 library(shiny)
 library(dplyr)
 library(stringr)
+library(shinyWidgets)
 
 
 ###reading in the engine tables as CSVs-- will eventually need to do this as RData and save it to the app
@@ -118,7 +119,7 @@ high_IFG<-value_DF_creator(value_list_dev,2)
 colnames(high_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
 IGT<-value_DF_creator(value_list_dev,3)
 colnames(IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
-IFG_IGT<-value_DF_creator(value_list,4)
+IFG_IGT<-value_DF_creator(value_list_dev,4)
 colnames(IFG_IGT)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
 
 pre_diabetic_population_dev<-low_IFG+high_IFG+IGT+IFG_IGT

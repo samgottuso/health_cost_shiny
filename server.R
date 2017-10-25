@@ -71,6 +71,7 @@ shinyServer(function(input, output) {
   tempData <- as.data.frame(tempData)
   tempData$Cost_without_intervention <- round(as.numeric(as.character(tempData$Cost_without_intervention)), 0)
   tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
+
   tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
      ggplot(data = tempData, aes(x = Year, y = value)) +
      geom_bar(aes(fill = variable),stat = "identity", position = "dodge")+
