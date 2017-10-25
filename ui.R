@@ -33,8 +33,18 @@ shinyUI(
                                                        selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County")),
                                                        circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                        tooltip = tooltipOptions(title = "Inputs")
-                                                     )
-                                                   ),
+                                                     )),
+                                            column(1,
+                                                   dropdownButton(
+                                                       textInput(inputId = "enterPop", label = "Enter total population"),
+                                                       sliderInput("whitePop", "Percent White:", min = 0, max = 100, value = 25, step=1),
+                                                       uiOutput("slider1"),
+                                                       uiOutput("slider2"),
+                                                       uiOutput("slider3"),
+                                                       circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
+                                                       tooltip = tooltipOptions(title = "Custom")
+                                                       
+                                                   )),
                                                    column(10,
                                                           wellPanel(id = "carouselPan",
                                                                     carouselPanel(auto.advance = F,
@@ -60,3 +70,4 @@ shinyUI(
                        )
   )
   )
+

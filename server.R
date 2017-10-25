@@ -12,8 +12,8 @@ library(ggplot2)
 library(ggthemes)
 library(scales)
 # 3 blue, one gray, one light green, bright green, red
- myPalette <- c ("#253746", "#0a5157", "#87af9a", "#0ea6b5", "#56565b", "#73aa4f", "#d54728")
-shinyServer(function(input, output) {
+myPalette <- c ("#253746", "#0a5157", "#87af9a", "#0ea6b5", "#56565b", "#73aa4f", "#d54728")
+shinyServer(function(input, output, session) {
   output$vis <- renderText({
     raceSelected <- input$raceSelect
     ageSelected <- input$ageSelect
@@ -61,25 +61,40 @@ shinyServer(function(input, output) {
   
   #renderplot cost per patient
   output$cost_per_patient <- renderPlot({
-  myrows = c("Cost_without_intervention","Cost_with_intervention")
-  tempData <- ROI_final()
-  tempData<-tempData[myrows,]
-  colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
-  tempData <- rbind(colnames(tempData), tempData)
-  rownames(tempData)[1]<-"Year"
-  tempData <- t(tempData)
-  tempData <- as.data.frame(tempData)
-  tempData$Cost_without_intervention <- round(as.numeric(as.character(tempData$Cost_without_intervention)), 0)
-  tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
+    myrows = c("Cost_without_intervention","Cost_with_intervention")
+    tempData <- ROI_final()
+    tempData<-tempData[myrows,]
+    colnames(tempData) <- c ("2016", "2017", "2018","2019", "2020")
+    tempData <- rbind(colnames(tempData), tempData)
+    rownames(tempData)[1]<-"Year"
+    tempData <- t(tempData)
+    tempData <- as.data.frame(tempData)
+    tempData$Cost_without_intervention <- round(as.numeric(as.character(tempData$Cost_without_intervention)), 0)
+    tempData$Cost_with_intervention <- round(as.numeric(as.character(tempData$Cost_with_intervention)), 0)
+    
+    tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
+    ggplot(data = tempData, aes(x = Year, y = value)) +
+      geom_bar(aes(fill = variable),stat = "identity", position = "dodge")+
+      scale_y_continuous(labels=dollar_format(prefix="$")) + 
+      ggtitle("Diabetes Treatment Costs") + 
+      theme(legend.title=element_blank()) + 
+      labs(x = "Year", y = "Cost")+
+      scale_fill_manual(values=c(myPalette[3], myPalette[4]))
+  })
 
-  tempData <- melt(tempData[,c('Year','Cost_without_intervention','Cost_with_intervention')],id.vars = 1)
-     ggplot(data = tempData, aes(x = Year, y = value)) +
-     geom_bar(aes(fill = variable),stat = "identity", position = "dodge")+
-     scale_y_continuous(labels=dollar_format(prefix="$")) + 
-     ggtitle("Diabetes Treatment Costs") + 
-     theme(legend.title=element_blank()) + 
-     labs(x = "Year", y = "Cost")+
-     scale_fill_manual(values=c(myPalette[3], myPalette[4]))
+  observe({
+    updateSliderInput(session,"blackPop", min=0,max= 100, value = 100 - input$whitePop - input$asianPop - input$hispanicPop)
+    #updateSliderInput(session,"asianPop", min=0,max= 100, value = 100 - input$whitePop - input$blackPop - input$hispanicPop)
+    #updateSliderInput(session,"hispanicPop", min=0,max=100, value = 100 - input$whitePop - input$asianPop - input$blackPop)
+  })
+  output$slider1 <- renderUI({
+    sliderInput("blackPop", "Percent Black: ", min=0,max=100, value=25)
+  })
+  output$slider2 <- renderUI({
+    sliderInput("asianPop", "Percent Asian: ", min=0,max=100, value=25)
+  })
+  output$slider3 <- renderUI({
+    sliderInput("hispanicPop", "Percent Hispanic: ", min=0,max=100, value=25)
   })
   
   #Anual Spend
@@ -143,7 +158,8 @@ shinyServer(function(input, output) {
     rownames(tempData) <-c ("Year", "Incurred_Cost_Avoidance")
     tempData <- t(tempData)
     tempData <- as.data.frame(tempData)
-    tempData$Incurred_Cost_Avoidance <- round(as.numeric(as.character(tempData$Incurred_Cost_Avoidance)), 0)
+    View(tempData)
+    tempData$Incurred_Cost_Avoidance <- (round(as.numeric(as.character(tempData$Incurred_Cost_Avoidance)), 0))/1000
     ggplot(data = tempData, aes(x = Year, y = Incurred_Cost_Avoidance))+
       geom_bar(stat = 'identity', position = 'dodge', fill = myPalette[2])+
       scale_y_continuous(labels=dollar_format(prefix="$"))+
