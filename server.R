@@ -22,14 +22,17 @@ shinyServer(function(input, output, session) {
     paste(raceSelected, ",", ageSelected, ",", genderSelected, ",", popSelected)
   })
   #reactive function means that anytime ROI_final changes, the data will be updated. access with ROI_final()
+  
+  
+  
+  
   ROI_final <- reactive ({
     
-    #custom_pop_df<-custom_pop(input$enterPop,input$whitePop,input$blackPop,input$asianPop,input$hispanicPop)
     
-    value_list<-healthcost_values_diabetes(input$popDFSelect,input$popSelect)
+    value_list<-healthcost_values_diabetes(input$popDFSelect,input$popSelect,custom_pop(input$enterPop,input$whitePop,input$blackPop,input$asianPop,input$hispanicPop))
     
     
-    low_IFG_<-value_DF_creator(value_list,1)
+    low_IFG<-value_DF_creator(value_list,1)
     colnames(low_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
     high_IFG<-value_DF_creator(value_list,2)
     colnames(high_IFG)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
@@ -52,8 +55,10 @@ shinyServer(function(input, output, session) {
     
     
     pre_diabetic_no_intervention<-(low_IFG_no_intervention+high_IFG_no_intervention+IGT_no_intervention+IFG_IGT_no_intervention)[c(1,4,5),]
+    pre_diabetic_no_intervention<-round(pre_diabetic_no_intervention,0)
     
     pre_diabetic_intervention<-(low_IFG_intervention+high_IFG_intervention+IGT_intervention+IFG_IGT_intervention)[c(1,4,6,7),]
+    pre_diabetic_intervention<-round(pre_diabetic_intervention,0)
     
     ROI_final<-ROI_table(pre_diabetic_no_intervention,pre_diabetic_intervention,.4,.03,10000,150)
     rownames(ROI_final) <- str_replace_all(rownames(ROI_final),"\\s+","_")
@@ -173,12 +178,9 @@ shinyServer(function(input, output, session) {
   
   #render pie chart of selected population
   
-  observeEvent(input$renderPie, {
-    output$pie <- renderPlot({
-      pie(pieData, labels = c("White", "Black", "Asian", "Hispanic"))
-    })
-  })
-  
+    output$Custom_Population <- renderTable({
+      custom_pop(input$enterPop,input$whitePop,input$blackPop,input$asianPop,input$hispanicPop)
+    },rownames=TRUE,colnames=TRUE)
   
 })
 

@@ -65,7 +65,7 @@ shinyUI(
                                            fluidRow(
                                              column(1,
                                                     dropdownButton(
-                                                      textInput(inputId = "enterPop", label = "Enter total population"),
+                                                      numericInput("enterPop", "Enter total population",value = 0),
                                                       numericInput("whitePop", "Percent White:", min = 0, max = 100, value = 25),
                                                       numericInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25),
                                                       numericInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25),
@@ -77,7 +77,7 @@ shinyUI(
                                                     )),
                                              column(10,
                                                     wellPanel(
-                                                      plotOutput("pie", height = '300px')
+                                                      tableOutput("Custom_Population")
                                                     )
                                              )
                                              

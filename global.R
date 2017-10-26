@@ -36,11 +36,9 @@ KC_DF<-cbind.data.frame(KC_hispanic_male,KC_white_male,KC_black_male,KC_asian_ma
 colnames(KC_DF)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
 rownames(KC_DF)<-c("20-39","40-59","60+")
 
-#Eventually will have to write a function that takes user inputs to create a custom population or imports from SAS/CSV (csv should be fairly easy if it's in this format...)
-#Possible Grace ask--- interactive formula that takes a total population and the % of minorities of each (slider input?) and then spits out a working DF in our format
 
 ###Function that takes the initial population and gives a huge list which can be sorted out to make seperate DFs, using diabetes engine... if hypertension engine is in the same format then just modify this to accept disease type as a argument
-healthcost_values_diabetes<-function(population_select,pop_estimate){
+healthcost_values_diabetes<-function(population_select,pop_estimate,custom_pop_df){
   ##creating the tables that are on the Engine-Diabetes tab
   #doing the multiplication and assigning
   
@@ -53,8 +51,7 @@ healthcost_values_diabetes<-function(population_select,pop_estimate){
   #     }
   # calculated_df[,i]<-(column_i)
   #   }
-  
-  
+
   
   if(population_select=="Baltimore"){
     population<-bmore_DF
@@ -199,7 +196,9 @@ case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,
   
   
   #Eventually this BMI list will have to be re-written to be a function, but if we just use the standard 34 than it's fine
-  BMI_list<-c(33,32,31.0,30,29)
+  #REAL LIST BMI_list<-c(33,32,31.0,30,29)
+  #AMMENDED LIST
+  BMI_list<-c(32,31,31,30,30)
   
   
 
@@ -256,6 +255,7 @@ case_analysis<-function(measure_table,age,race,gender,pop_estimate,intervention,
 }
 
 #These are for developing, putting them into server.R for interactives 
+##These should match up to the tables on the Engine-Diabetes Tab on the righthand side
 low_IFG_no_intervention_dev<-case_analysis(low_IFG,'All Ages','All Races','Both Genders','high','no',34)
 low_IFG_intervention_dev<-case_analysis(low_IFG,'All Ages','All Races','Both Genders','high','yes',34)
 high_IFG_no_intervention_dev<-case_analysis(high_IFG,'All Ages','All Races','Both Genders','high','no',34)
@@ -269,24 +269,30 @@ pre_diabetic_no_intervention_dev<-(low_IFG_no_intervention_dev+high_IFG_no_inter
 
 pre_diabetic_intervention_dev<-(low_IFG_intervention_dev+high_IFG_intervention_dev+IGT_intervention_dev+IFG_IGT_intervention_dev)[c(1,4,6,7),]
 
+#doing rounding at the end
+pre_diabetic_no_intervention_dev<-round(pre_diabetic_no_intervention_dev,0)
+pre_diabetic_intervention_dev<-round(pre_diabetic_intervention_dev,0)
 
 #Take information from all of these tables and put it into the final ROI table
 
 #What I need... Diabetic Case Avoidance, Commitment adjustusted cases avoidance and cases, healthcare inflation (INPUT EVENTUALLY), cost of treatment (input),total cost of treatment w/,cost of  
 ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,program_attrition,healthcare_inflation,treatment_cost,intervention_cost){
   diabetic_case_avoidance<-pre_diabetic_no_intervention[3,1]-pre_diabetic_intervention[4,1]
+  #Commitment adjusted incurred is the actual amount of people that will get treated--- the diabetic case avoidance is the max IF everyone got treated
   commitment_adjusted_incurred<-diabetic_case_avoidance*(1-program_attrition)
+  #Commitment adjusted is the number of people in the community who still have diabetes
   commitment_adjusted<-pre_diabetic_intervention[4,1]+(diabetic_case_avoidance-commitment_adjusted_incurred)
   healthcare_inflation=healthcare_inflation
   treatment_cost=treatment_cost
   cost_no_intervention<-treatment_cost*pre_diabetic_no_intervention[3,1]
-  cost_intervention<-treatment_cost*pre_diabetic_intervention[4,1]
+  cost_intervention<-treatment_cost*commitment_adjusted
   cost_avoidance<-commitment_adjusted_incurred*treatment_cost
   #WHY DIVIDE THE PRE-DIABETIC POPULATION BY 5?
-  annual_intervention<-intervention_cost*pre_diabetic_intervention[1,1]
+  #non-dividing by 5 + dynamic population annual_intervention<-intervention_cost*pre_diabetic_intervention[1,1]
+  #this is a static population/5
+  annual_intervention<-intervention_cost*(pre_diabetic_intervention[1,1]/5)
   cumulative_intervention<-annual_intervention
-  cumulative_ROI<-(cost_avoidance/cumulative_intervention)
-  #do I need to subtract 1?
+  cumulative_ROI<-(cost_avoidance/cumulative_intervention)-1
   year_1<-c(diabetic_case_avoidance,commitment_adjusted_incurred,commitment_adjusted,healthcare_inflation,treatment_cost,cost_no_intervention,cost_intervention,cost_avoidance,annual_intervention,cumulative_intervention,cumulative_ROI)
   for(i in 2:5){
     diabetic_case_avoidance<-pre_diabetic_no_intervention[3,i]-pre_diabetic_intervention[4,i]
@@ -295,13 +301,15 @@ ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,progr
     healthcare_inflation<-healthcare_inflation
     treatment_cost<-treatment_cost+(treatment_cost*healthcare_inflation)
     cost_no_intervention<-treatment_cost*pre_diabetic_no_intervention[3,i]
-    cost_intervention<-treatment_cost*pre_diabetic_intervention[4,i]
+    cost_intervention<-treatment_cost*commitment_adjusted
     cost_avoidance<-commitment_adjusted_incurred*treatment_cost
     #Healthcost currently isn't changing year to year... but it probably should right?
     ##Healthcost is multiplying the cost as a 5 year cost (so annual figures at 1/5 of the total) but that doesn't make a ton of sense--- it only costs $150 to treat someone for 5 years?
-    annual_intervention<-intervention_cost*pre_diabetic_intervention[1,i]
+    #Non-dividing by 5 version + dynamic population annual_intervention<-intervention_cost*pre_diabetic_intervention[1,i]
+    #this is a static population/5
+    annual_intervention<-intervention_cost*(pre_diabetic_intervention[1,1]/5)
     cumulative_intervention<-cumulative_intervention+annual_intervention
-    cumulative_ROI<-(cost_avoidance/cumulative_intervention)
+    cumulative_ROI<-(cost_avoidance/cumulative_intervention)-1
     assign(paste('year',i,sep = '_'),value=c(diabetic_case_avoidance,commitment_adjusted_incurred,commitment_adjusted,healthcare_inflation,treatment_cost,cost_no_intervention,cost_intervention,cost_avoidance,annual_intervention,cumulative_intervention,cumulative_ROI))
     
   }
@@ -323,8 +331,8 @@ custom_pop<-function(total_population,percent_white,percent_black,percent_asian,
   ##assuming that ages follow the same as the general US population (27%,26%,21%) are even and gender is split 50/50
   # 
   if(percent_white+percent_black+percent_asian+percent_hispanic!=100){
-     print("Please ensure that populations add up to be equal 100%")
-   }else{
+      print("Please ensure that populations add up to be equal 100%")
+  }else{
   
   ages_distribution<-c(.27,.26,.21)
   hispanic_pop<-total_population*(as.integer(percent_hispanic)/100)
@@ -353,14 +361,17 @@ custom_pop<-function(total_population,percent_white,percent_black,percent_asian,
   custom_asian_female<-asian_female*ages_distribution
   
   custom_pop_df<-cbind.data.frame(custom_hispanic_male,custom_white_male,custom_black_male,custom_asian_male,custom_hispanic_female,custom_white_female,custom_black_female,custom_asian_female)
+  custom_pop_df<-round(custom_pop_df,0)
   colnames(custom_pop_df)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
   rownames(custom_pop_df)<-c("20-39","40-59","60+")
   
+  
   return(custom_pop_df)
     
-   }
-  
 }
 
-custom_pop_dev<-custom_pop(10000,24,30,2,44)
+
+
+}
+
 
