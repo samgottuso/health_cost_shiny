@@ -30,30 +30,15 @@ shinyUI(
                                                        column(6,
                                                               selectInput(inputId = 'popSelect', width = '120px', label = "Pop. Estimate", choices = c("High","Base", "Low"))
                                                        )),
-<<<<<<< HEAD
+
                                                        selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County","Custom")),
                                                        circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                        tooltip = tooltipOptions(title = "Inputs")
                                                      )),
-                                            column(1,
-                                                   dropdownButton(
-                                                       textInput(inputId = "enterPop", label = "Enter total population"),
-                                                       sliderInput("whitePop", "Percent White:", min = 0, max = 100, value = 25, step=1),
-                                                       sliderInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25, step=1),
-                                                       sliderInput("hispanicPop", "Percent Hispanic:", min = 0, max = 100, value = 25, step=1),
-                                                       sliderInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25, step=1),
-                                                       circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
-                                                       tooltip = tooltipOptions(title = "Custom")
-                                                       
-=======
-                                                     selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County")),
-                                                     circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
-                                                     tooltip = tooltipOptions(title = "Inputs")
-                                                     
-                                                     
-                                                     
->>>>>>> c274a1ba2cf0b058b8251784162d592f70c58bfd
-                                                   )),
+                                            
+                                                   
+                                        
+                                      
                                             column(10,
                                                    wellPanel(id = "carouselPan", height = '300px',
                                                              carouselPanel(auto.advance = F, 

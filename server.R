@@ -174,7 +174,6 @@ shinyServer(function(input, output, session) {
   #render pie chart of selected population
   
   observeEvent(input$renderPie, {
-    pieData <- c (input$whitePop, input$blackPop, input$asianPop, input$hispanicPop)
     output$pie <- renderPlot({
       pie(pieData, labels = c("White", "Black", "Asian", "Hispanic"))
     })
