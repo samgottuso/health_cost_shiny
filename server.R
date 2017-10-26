@@ -81,21 +81,8 @@ shinyServer(function(input, output, session) {
       labs(x = "Year", y = "Cost")+
       scale_fill_manual(values=c(myPalette[3], myPalette[4]))
   })
+  
 
-  observe({
-    updateSliderInput(session,"blackPop", min=0,max= 100, value = 100 - input$whitePop - input$asianPop - input$hispanicPop)
-    #updateSliderInput(session,"asianPop", min=0,max= 100, value = 100 - input$whitePop - input$blackPop - input$hispanicPop)
-    #updateSliderInput(session,"hispanicPop", min=0,max=100, value = 100 - input$whitePop - input$asianPop - input$blackPop)
-  })
-  output$slider1 <- renderUI({
-    sliderInput("blackPop", "Percent Black: ", min=0,max=100, value=25)
-  })
-  output$slider2 <- renderUI({
-    sliderInput("asianPop", "Percent Asian: ", min=0,max=100, value=25)
-  })
-  output$slider3 <- renderUI({
-    sliderInput("hispanicPop", "Percent Hispanic: ", min=0,max=100, value=25)
-  })
   
   #Anual Spend
   output$annual_spend <- renderPlot({
@@ -158,13 +145,12 @@ shinyServer(function(input, output, session) {
     rownames(tempData) <-c ("Year", "Incurred_Cost_Avoidance")
     tempData <- t(tempData)
     tempData <- as.data.frame(tempData)
-    View(tempData)
     tempData$Incurred_Cost_Avoidance <- (round(as.numeric(as.character(tempData$Incurred_Cost_Avoidance)), 0))/1000
     ggplot(data = tempData, aes(x = Year, y = Incurred_Cost_Avoidance))+
       geom_bar(stat = 'identity', position = 'dodge', fill = myPalette[2])+
       scale_y_continuous(labels=dollar_format(prefix="$"))+
-      ggtitle("Incurred Costs Avoided")+geom_text(aes(label=Incurred_Cost_Avoidance))+
-      labs(x = "Year", y = "Thousands")
+      ggtitle("Incurred Costs Avoided")+geom_text(aes(label=comma(Incurred_Cost_Avoidance)), vjust = -0.5)+
+      labs(x = "Year", y = "Dollars(in thousands)")
     
   })
   output$roi <- renderPlot({
@@ -181,7 +167,15 @@ shinyServer(function(input, output, session) {
       ggtitle("Cumulative ROI")+geom_text(aes(label=Cumulative_ROI))+
       scale_y_continuous(labels=percent_format())+
       labs(x = "Year", y = "Percent")
-    
+  })
+  
+  #render pie chart of selected population
+  
+  observeEvent(input$renderPie, {
+    pieData <- c (input$whitePop, input$blackPop, input$asianPop, input$hispanicPop)
+    output$pie <- renderPlot({
+      pie(pieData, labels = c("White", "Black", "Asian", "Hispanic"))
+    })
   })
   
   
