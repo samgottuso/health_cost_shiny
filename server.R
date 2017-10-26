@@ -24,6 +24,8 @@ shinyServer(function(input, output, session) {
   #reactive function means that anytime ROI_final changes, the data will be updated. access with ROI_final()
   ROI_final <- reactive ({
     
+    #custom_pop_df<-custom_pop(input$enterPop,input$whitePop,input$blackPop,input$asianPop,input$hispanicPop)
+    
     value_list<-healthcost_values_diabetes(input$popDFSelect,input$popSelect)
     
     
@@ -145,7 +147,7 @@ shinyServer(function(input, output, session) {
     
     plot<-plot+geom_line(data=Spending_df_long,aes(Year,Spending,colour=Spending_df_long$`Spending Category`, group=Spending_df_long$`Spending Category`),stat = 'identity')+
       labs(colour = "Spending Category")+
-      scale_color_manual(values=c(myPalette[3], myPalette[6]))
+      scale_color_manual(values=c(myPalette[7], myPalette[6]))
     
     plot
   })

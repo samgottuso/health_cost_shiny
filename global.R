@@ -60,6 +60,8 @@ healthcost_values_diabetes<-function(population_select,pop_estimate){
     population<-bmore_DF
   }else if(population_select=="Kings County"){
     population<-KC_DF
+  }else if(population_select=="Custom"){
+    population<-custom_pop_df
   }
   
   ##New Way
@@ -312,3 +314,53 @@ ROI_table<-function(pre_diabetic_no_intervention,pre_diabetic_intervention,progr
 
 ROI_final_dev<-ROI_table(pre_diabetic_no_intervention_dev,pre_diabetic_intervention_dev,.4,.03,10000,150)
 rownames(ROI_final_dev) <- str_replace_all(rownames(ROI_final_dev),"\\s+","_")
+
+
+##Custom Population Creator
+
+
+custom_pop<-function(total_population,percent_white,percent_black,percent_asian,percent_hispanic){
+  ##assuming that ages follow the same as the general US population (27%,26%,21%) are even and gender is split 50/50
+  # 
+  if(percent_white+percent_black+percent_asian+percent_hispanic!=100){
+     print("Please ensure that populations add up to be equal 100%")
+   }else{
+  
+  ages_distribution<-c(.27,.26,.21)
+  hispanic_pop<-total_population*(as.integer(percent_hispanic)/100)
+  white_pop<-total_population*(as.integer(percent_white)/100)
+  black_pop<-total_population*(as.integer(percent_black)/100)
+  asian_pop<-total_population*(as.integer(percent_asian)/100)
+  
+  hispanic_male<-hispanic_pop*.49
+  white_male<-white_pop*.49
+  black_male<-black_pop*.49
+  asian_male<-asian_pop*.49
+  
+  hispanic_female<-hispanic_pop*.51
+  white_female<-white_pop*.51
+  black_female<-black_pop*.51
+  asian_female<-asian_pop*.51
+  
+  custom_hispanic_male<-hispanic_male*ages_distribution
+  custom_white_male<-white_male*ages_distribution
+  custom_black_male<-black_male*ages_distribution
+  custom_asian_male<-asian_male*ages_distribution
+  
+  custom_hispanic_female<-hispanic_female*ages_distribution
+  custom_white_female<-hispanic_female*ages_distribution
+  custom_black_female<-black_female*ages_distribution
+  custom_asian_female<-asian_female*ages_distribution
+  
+  custom_pop_df<-cbind.data.frame(custom_hispanic_male,custom_white_male,custom_black_male,custom_asian_male,custom_hispanic_female,custom_white_female,custom_black_female,custom_asian_female)
+  colnames(custom_pop_df)<-c("Hispanic Male","White Male","Black Male","Asian Male","Hispanic Female","White Female","Black Female","Asian Female")
+  rownames(custom_pop_df)<-c("20-39","40-59","60+")
+  
+  return(custom_pop_df)
+    
+   }
+  
+}
+
+custom_pop_dev<-custom_pop(10000,24,30,2,44)
+

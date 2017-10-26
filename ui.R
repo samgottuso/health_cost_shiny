@@ -30,7 +30,7 @@ shinyUI(
                                                        column(6,
                                                        selectInput(inputId = 'popSelect', width = '120px', label = "Pop. Estimate", choices = c("High","Base", "Low"))
                                                        )),
-                                                       selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County")),
+                                                       selectInput(inputId = 'popDFSelect',width = '120px', label = "Population Model", choices = c("Baltimore","Kings County","Custom")),
                                                        circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                        tooltip = tooltipOptions(title = "Inputs")
                                                      )),
@@ -38,9 +38,9 @@ shinyUI(
                                                    dropdownButton(
                                                        textInput(inputId = "enterPop", label = "Enter total population"),
                                                        sliderInput("whitePop", "Percent White:", min = 0, max = 100, value = 25, step=1),
-                                                       uiOutput("slider1"),
-                                                       uiOutput("slider2"),
-                                                       uiOutput("slider3"),
+                                                       sliderInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25, step=1),
+                                                       sliderInput("hispanicPop", "Percent Hispanic:", min = 0, max = 100, value = 25, step=1),
+                                                       sliderInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25, step=1),
                                                        circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                        tooltip = tooltipOptions(title = "Custom")
                                                        
