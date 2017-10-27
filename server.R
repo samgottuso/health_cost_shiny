@@ -176,11 +176,11 @@ shinyServer(function(input, output, session) {
       labs(x = "Year", y = "Percent")
   })
   
-  #render pie chart of selected population
-  
+  #render table of custom
+  observeEvent(input$goButton, {
     output$Custom_Population <- renderTable({
       custom_pop(input$enterPop,input$whitePop,input$blackPop,input$asianPop,input$hispanicPop)
     },rownames=TRUE,colnames=TRUE)
   
 })
-
+})

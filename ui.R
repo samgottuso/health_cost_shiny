@@ -70,7 +70,7 @@ shinyUI(
                                                       numericInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25),
                                                       numericInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25),
                                                       numericInput("hispanicPop", "Percent Hispanic:", min = 0, max = 100, value = 25),
-                                                      actionButton("renderPie", "Go"),
+                                                      actionButton("goButton", "Go"),
                                                       circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                       tooltip = tooltipOptions(title = "Custom")
                                                       
