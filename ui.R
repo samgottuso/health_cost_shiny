@@ -35,13 +35,25 @@ shinyUI(
                                                        circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
                                                        tooltip = tooltipOptions(title = "Inputs")
                                                      )),
-                                            
+                                            column(1,
+                                                   dropdownButton(
+                                                     numericInput("enterPop", "Enter total population",value = 0),
+                                                     numericInput("whitePop", "Percent White:", min = 0, max = 100, value = 25),
+                                                     numericInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25),
+                                                     numericInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25),
+                                                     numericInput("hispanicPop", "Percent Hispanic:", min = 0, max = 100, value = 25),
+                                                     actionButton("goButton", "Go"),
+                                                     circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
+                                                     tooltip = tooltipOptions(title = "Custom")
+                                                     
+                                                   )),
                                                    
                                         
                                       
                                             column(10,
                                                    wellPanel(id = "carouselPan", height = '300px',
-                                                             carouselPanel(auto.advance = F, 
+                                                             carouselPanel(auto.advance = T, 
+                                                                           tableOutput("Custom_Population"),
                                                                            plotOutput(outputId = "cases_avoided_per_year",height = "200px"),
                                                                            plotOutput(outputId = "ttl_cost_avoid", height = '200px'),
                                                                            plotOutput(outputId = "roi", height = '200px')
@@ -63,21 +75,9 @@ shinyUI(
                        tabPanel("New", value = "new",
                                 fluidPage( id = "customPage",
                                            fluidRow(
-                                             column(1,
-                                                    dropdownButton(
-                                                      numericInput("enterPop", "Enter total population",value = 0),
-                                                      numericInput("whitePop", "Percent White:", min = 0, max = 100, value = 25),
-                                                      numericInput("blackPop", "Percent Black:", min = 0, max = 100, value = 25),
-                                                      numericInput("asianPop", "Percent Asian:", min = 0, max = 100, value = 25),
-                                                      numericInput("hispanicPop", "Percent Hispanic:", min = 0, max = 100, value = 25),
-                                                      actionButton("goButton", "Go"),
-                                                      circle = TRUE, status = "primary", size = "sm", icon = icon("gear"), width = "300px",
-                                                      tooltip = tooltipOptions(title = "Custom")
-                                                      
-                                                    )),
+                                             
                                              column(10,
                                                     wellPanel(
-                                                      tableOutput("Custom_Population")
                                                     )
                                              )
                                              
